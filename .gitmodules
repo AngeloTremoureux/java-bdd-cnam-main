@@ -1,3 +1,6 @@
 [submodule "app-java"]
 	path = app-java
 	url = https://github.com/AngeloTremoureux/java-cnam.git
+[submodule "app-php"]
+	path = app-php
+	url = https://github.com/vincent83160/bdd-cnam.git
