@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+    # Application Java Maven (Projet JAVA)
+    app-java:
+        build:
+            context: ./app-java
+            dockerfile: Dockerfile
+        volumes:
+            - ./app-php:/var/www/html/bdd-cnam
+        depends_on:
+            - db
+        links:
+            - db:postgres
+
+    # Application PHP Symfony (Projet BDD)
+    app-php:
+        build:
+            context: ./app-php
+            dockerfile: Dockerfile
+        ports:
+            - 8080:80
+        volumes:
+            - ./app-php:/var/www/html/bdd-cnam
+        command: ["/launch.sh"]
+        depends_on:
+            - db
+        links:
+            - db:postgres
+
+    # Base de données PostgreSQL (Commune aux deux projets)
+    db:
+        image: postgres:15.4-bullseye
+        volumes:
+            - ./docker/data/postgres/logs:/var/log/postgresql
+            - ./docker/data/postgres/data:/var/lib/postgresql/data
+            - ./projet-cnam-db.sql:/docker-entrypoint-initdb.d/projet-cnam-db.sql
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_PASSWORD=latina
+            - POSTGRES_USER=alexis
+            - POSTGRES_DB=db
+
+    # Interface d'administration de la base de données pgAdmin (Commune aux deux projets)
+    pgadmin:
+        container_name: pgadmin_container
+        image: dpage/pgadmin4:7.6
+        environment:
+            PGADMIN_DEFAULT_EMAIL: postgres@local.int
+            PGADMIN_DEFAULT_PASSWORD: latina
+            PG_DATABASE: db
+            PG_USER: alexis
+            PG_PASSWORD: latina
+        volumes:
+            - ./docker/pgadmin:/root/.pgadmin
+        ports:
+            - 8081:80
+        links:
+            - db:postgres
