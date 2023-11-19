@@ -12,6 +12,7 @@ services:
             - db
         links:
             - db:postgres
+        entrypoint: ["/etc/dev/app-java/scripts/entrypoint.sh"]
 
     # Application PHP Symfony (Projet BDD)
     app-php:
