@@ -7,7 +7,7 @@ services:
             context: ./app-java
             dockerfile: Dockerfile
         volumes:
-            - ./app-php:/var/www/html/bdd-cnam
+            - ./app-java:/etc/dev/app-java
         depends_on:
             - db
         links:
@@ -22,19 +22,21 @@ services:
             - 8080:80
         volumes:
             - ./app-php:/var/www/html/bdd-cnam
-        command: ["/launch.sh"]
         depends_on:
             - db
         links:
             - db:postgres
+        entrypoint: ["/var/www/html/bdd-cnam/scripts/entrypoint.sh"]
 
     # Base de données PostgreSQL (Commune aux deux projets)
     db:
         image: postgres:15.4-bullseye
         volumes:
-            - ./docker/data/postgres/logs:/var/log/postgresql
-            - ./docker/data/postgres/data:/var/lib/postgresql/data
-            - ./projet-cnam-db.sql:/docker-entrypoint-initdb.d/projet-cnam-db.sql
+            - ./app-data/data/postgres/logs:/var/log/postgresql
+            - ./app-data/data/postgres/data:/var/lib/postgresql/data
+            - ./app-data/schemas:/docker-entrypoint-initdb.d/
+            - ./app-data/backup:/backup/
+            - ./app-data/scripts:/scripts
         ports:
             - 5432:5432
         environment:
@@ -53,7 +55,7 @@ services:
             PG_USER: alexis
             PG_PASSWORD: latina
         volumes:
-            - ./docker/pgadmin:/root/.pgadmin
+            - ./app-data/data/pgadmin:/root/.pgadmin
         ports:
             - 8081:80
         links:

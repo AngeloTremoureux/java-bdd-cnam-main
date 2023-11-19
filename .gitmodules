@@ -4,3 +4,6 @@
 [submodule "app-php"]
 	path = app-php
 	url = https://github.com/vincent83160/bdd-cnam.git
+[submodule "app-data"]
+	path = app-data
+	url = https://github.com/AngeloTremoureux/bdd-sql-cnam.git
