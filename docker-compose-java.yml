@@ -1,0 +1,17 @@
+version: '3'
+
+include:
+  - docker-compose.base.yml
+services:
+    # Application Java Maven (Projet JAVA)
+    app-java:
+        build:
+            context: ./app-java
+            dockerfile: Dockerfile
+        volumes:
+            - ./app-java:/etc/dev/app-java
+        depends_on:
+            - db
+        links:
+            - db:postgres
+        entrypoint: ["/etc/dev/app-java/scripts/entrypoint.sh"]
