@@ -1,34 +1,6 @@
 version: '3'
 
 services:
-    # Application Java Maven (Projet JAVA)
-    app-java:
-        build:
-            context: ./app-java
-            dockerfile: Dockerfile
-        volumes:
-            - ./app-java:/etc/dev/app-java
-        depends_on:
-            - db
-        links:
-            - db:postgres
-        entrypoint: ["/etc/dev/app-java/scripts/entrypoint.sh"]
-
-    # Application PHP Symfony (Projet BDD)
-    app-php:
-        build:
-            context: ./app-php
-            dockerfile: Dockerfile
-        ports:
-            - 8080:80
-        volumes:
-            - ./app-php:/var/www/html/bdd-cnam
-        depends_on:
-            - db
-        links:
-            - db:postgres
-        entrypoint: ["/var/www/html/bdd-cnam/scripts/entrypoint.sh"]
-
     # Base de données PostgreSQL (Commune aux deux projets)
     db:
         image: postgres:15.4-bullseye

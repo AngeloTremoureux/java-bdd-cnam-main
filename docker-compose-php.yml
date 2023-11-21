@@ -1,0 +1,19 @@
+version: '3'
+
+include:
+  - docker-compose.base.yml
+services:
+    # Application PHP Symfony (Projet BDD)
+    app-php:
+        build:
+            context: ./app-php
+            dockerfile: Dockerfile
+        ports:
+            - 8080:80
+        volumes:
+            - ./app-php:/var/www/html/bdd-cnam
+        depends_on:
+            - db
+        links:
+            - db:postgres
+        entrypoint: ["/var/www/html/bdd-cnam/scripts/entrypoint.sh"]
